@@ -1,0 +1,45 @@
+@MyMonolithicApp.Api_HostAddress = https://localhost:7068
+
+GET {{MyMonolithicApp.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
+
+@productId = 650443e0-c6c6-48d3-3fb2-08dd26c249bc
+
+### Get all products
+GET {{MyMonolithicApp.Api_HostAddress}}/api/products
+Accept: application/json
+
+### Get product by ID
+GET {{MyMonolithicApp.Api_HostAddress}}/api/products/{{productId}}
+Accept: application/json
+
+### Create a new product
+POST {{MyMonolithicApp.Api_HostAddress}}/api/products
+Content-Type: application/json
+Accept: application/json
+
+{
+  "name": "New Product 2",
+  "price": 76.34
+}
+
+### Update an existing product
+PUT {{MyMonolithicApp.Api_HostAddress}}/api/products/{{productId}}
+Content-Type: application/json
+Accept: application/json
+
+{
+  "id": "650443e0-c6c6-48d3-3fb2-08dd26c249bc",
+  "name": "Updated Product",
+  "price": 150.0
+}
+
+### Delete a product
+DELETE {{MyMonolithicApp.Api_HostAddress}}/api/products/{{productId}}
+Accept: application/json
+
+GET {{MyMonolithicApp.Api_HostAddress}}/api/products
+
+###
