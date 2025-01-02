@@ -5,7 +5,7 @@ Accept: application/json
 
 ###
 
-@productId = 650443e0-c6c6-48d3-3fb2-08dd26c249bc
+@productId = 0b83ed8e-3f57-46aa-3289-08dd26c304bb
 
 ### Get all products
 GET {{MyMonolithicApp.Api_HostAddress}}/api/products
@@ -21,8 +21,8 @@ Content-Type: application/json
 Accept: application/json
 
 {
-  "name": "New Product 2",
-  "price": 76.34
+  "name": "New Product 1",
+  "price": 54.98f
 }
 
 ### Update an existing product
@@ -31,8 +31,8 @@ Content-Type: application/json
 Accept: application/json
 
 {
-  "id": "650443e0-c6c6-48d3-3fb2-08dd26c249bc",
-  "name": "Updated Product",
+  "id": "0b83ed8e-3f57-46aa-3289-08dd26c304bb",
+  "name": "New Product 2",
   "price": 150.0
 }
 
