@@ -32,7 +32,7 @@ namespace MyMonolithicApp.Products.Infrastructure.Repositories
 
         public async Task<IEnumerable<Product>> GetAllAsync() => await _context.Products.ToListAsync();
 
-        public async Task<Product> GetByIdAsync(Guid id) => await _context.Products.FindAsync(id);
+        public async Task<Product?> GetByIdAsync(Guid id) => await _context.Products.FindAsync(id);
 
         public async Task UpdateAsync(Product entity)
         {

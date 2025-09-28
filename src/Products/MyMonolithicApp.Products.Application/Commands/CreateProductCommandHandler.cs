@@ -28,7 +28,11 @@ namespace MyMonolithicApp.Products.Application.Commands
             var product = new Product
             {
                 Name = request.Name,
-                Price = finalPrice
+                Description = request.Description,
+                Price = finalPrice,
+                Category = request.Category,
+                StockQuantity = request.StockQuantity,
+                IsActive = request.IsActive
             };
 
             await _productRepository.AddAsync(product);

@@ -113,5 +113,25 @@ namespace MyMonolithicApp.Api.Controllers
 
             return NoContent();
         }
+
+        /// <summary>
+        /// Atualiza o estoque de um produto específico.
+        /// </summary>
+        /// <param name="id">ID do produto.</param>
+        /// <param name="command">Dados de atualização do estoque.</param>
+        /// <returns>Retorna o produto com estoque atualizado.</returns>
+        /// <response code="200">Retorna o produto com estoque atualizado.</response>
+        /// <response code="400">Se houver falha de validação (estoque negativo).</response>
+        /// <response code="404">Se o produto não for encontrado.</response>
+        [HttpPatch("{id}/stock")]
+        [ProducesResponseType(typeof(ProductDto), (int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType((int)HttpStatusCode.NotFound)]
+        public async Task<ActionResult<ProductDto>> UpdateStock(Guid id, [FromBody] UpdateProductStockCommand command)
+        {
+            command.ProductId = id;
+            var updatedProduct = await _mediator.Send(command);
+            return Ok(updatedProduct);
+        }
     }
 }
