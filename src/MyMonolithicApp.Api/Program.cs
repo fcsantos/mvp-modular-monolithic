@@ -4,6 +4,7 @@ using MyMonolithicApp.Products.Infrastructure;
 using MyMonolithicApp.Api.Middleware;
 using MyMonolithicApp.Products.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,10 +19,10 @@ Log.Logger = new LoggerConfiguration()
 
 builder.Host.UseSerilog();
 
-// 2. Adicionar serviços
+// 2. Adicionar serviï¿½os
 builder.Services.AddControllers();
 
-// 3. Registrar ProductsApplication + ProductsInfrastructure
+// 3. Registrar ProductsApplication + ProductsInfrastructure + Health Checks
 string? productsConnection = builder.Configuration.GetConnectionString("ProductsConnection");
 if (string.IsNullOrEmpty(productsConnection))
 {
@@ -31,18 +32,34 @@ if (string.IsNullOrEmpty(productsConnection))
 builder.Services.AddProductsApplication();
 builder.Services.AddProductsInfrastructure(productsConnection);
 
+// 4. Configurar Health Checks
+builder.Services.AddHealthChecks()
+    .AddDbContextCheck<ProductsDbContext>()
+    .AddCheck("self", () => HealthCheckResult.Healthy("Application is running"));
+
 // 4. (Opcional) Swagger
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+// 5. Configurar CORS para desenvolvimento
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("DevelopmentPolicy", policy =>
+    {
+        policy.AllowAnyOrigin()
+              .AllowAnyMethod()
+              .AllowAnyHeader();
+    });
+});
+
 var app = builder.Build();
 
-// 5. (Opcional) Criar ou migrar o banco de dados
+// 6. (Opcional) Criar ou migrar o banco de dados
 
 // Importante:
-//Em produção, é comum ter um processo de CI/CD ou script de deploy que aplica as migrações antes de iniciar a aplicação.
-//Mas para projetos simples, labs ou cenários “dev-friendly ou MVP”, fazer o dbContext.Database.Migrate()
-//no Program.cs é prático.
+//Em produï¿½ï¿½o, ï¿½ comum ter um processo de CI/CD ou script de deploy que aplica as migraï¿½ï¿½es antes de iniciar a aplicaï¿½ï¿½o.
+//Mas para projetos simples, labs ou cenï¿½rios ï¿½dev-friendly ou MVPï¿½, fazer o dbContext.Database.Migrate()
+//no Program.cs ï¿½ prï¿½tico.
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
@@ -54,24 +71,29 @@ using (var scope = app.Services.CreateScope())
     }
     catch (Exception ex)
     {
-        // Você pode registrar o erro com Serilog ou outra ferramenta de logging
-        Log.Fatal(ex, "Erro ao criar/aplicar migrações do banco de dados.");
-        throw; // Opcional: relançar a exceção para encerrar a aplicação
+        // Vocï¿½ pode registrar o erro com Serilog ou outra ferramenta de logging
+        Log.Fatal(ex, "Erro ao criar/aplicar migraï¿½ï¿½es do banco de dados.");
+        throw; // Opcional: relanï¿½ar a exceï¿½ï¿½o para encerrar a aplicaï¿½ï¿½o
     }
 }
 
-// 6. Registrar nosso middleware:
+// 7. Registrar nosso middleware:
 app.UseMiddleware<GlobalExceptionMiddleware>();
 
-// 7. Pipeline
+// 8. Pipeline
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+    app.UseCors("DevelopmentPolicy");
 }
 
 app.UseSerilogRequestLogging();
 app.UseHttpsRedirection();
+
+// Health checks endpoint
+app.MapHealthChecks("/health");
+
 app.MapControllers();
 
 app.Run();

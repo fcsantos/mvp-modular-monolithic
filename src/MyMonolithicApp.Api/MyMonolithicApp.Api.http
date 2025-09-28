@@ -1,5 +1,10 @@
 @MyMonolithicApp.Api_HostAddress = https://localhost:7068
 
+### Health Check - NEW FEATURE! 🚀
+GET {{MyMonolithicApp.Api_HostAddress}}/health
+Accept: application/json
+
+### Weather API (Original)
 GET {{MyMonolithicApp.Api_HostAddress}}/weatherforecast/
 Accept: application/json
 
@@ -15,31 +20,50 @@ Accept: application/json
 GET {{MyMonolithicApp.Api_HostAddress}}/api/products/{{productId}}
 Accept: application/json
 
-### Create a new product
+### Create a new product - ENHANCED WITH NEW PROPERTIES! 🚀
 POST {{MyMonolithicApp.Api_HostAddress}}/api/products
 Content-Type: application/json
 Accept: application/json
 
 {
-  "name": "New Product 1",
-  "price": 54.98f
+  "name": "Premium Laptop",
+  "description": "High-performance laptop for developers",
+  "price": 1299.99,
+  "category": "Electronics",
+  "stockQuantity": 50,
+  "isActive": true
 }
 
-### Update an existing product
+### Update an existing product - ENHANCED WITH NEW PROPERTIES! 🚀
 PUT {{MyMonolithicApp.Api_HostAddress}}/api/products/{{productId}}
 Content-Type: application/json
 Accept: application/json
 
 {
   "id": "0b83ed8e-3f57-46aa-3289-08dd26c304bb",
-  "name": "New Product 2",
-  "price": 150.0
+  "name": "Updated Premium Laptop",
+  "description": "Updated high-performance laptop with latest specs",
+  "price": 1399.99,
+  "category": "Electronics",
+  "stockQuantity": 45,
+  "isActive": true
+}
+
+### Update product stock - NEW FEATURE! 🚀
+PATCH {{MyMonolithicApp.Api_HostAddress}}/api/products/{{productId}}/stock
+Content-Type: application/json
+Accept: application/json
+
+{
+  "newStockQuantity": 100
 }
 
 ### Delete a product
 DELETE {{MyMonolithicApp.Api_HostAddress}}/api/products/{{productId}}
 Accept: application/json
 
+### Verify deletion
 GET {{MyMonolithicApp.Api_HostAddress}}/api/products
+Accept: application/json
 
 ###

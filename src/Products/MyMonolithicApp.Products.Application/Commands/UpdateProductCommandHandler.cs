@@ -42,9 +42,13 @@ namespace MyMonolithicApp.Products.Application.Commands
 
             var finalPrice = _discountService.ApplyConditionalDiscount(request.Price);
 
-            // Atualizar as propriedades
+            // Atualizar as propriedades usando os métodos de domínio
             product.Name = request.Name;
-            product.Price = finalPrice;
+            product.Description = request.Description;
+            product.Category = request.Category;
+            product.IsActive = request.IsActive;
+            product.UpdatePrice(finalPrice);
+            product.UpdateStock(request.StockQuantity);
 
             await _productRepository.UpdateAsync(product);
 
